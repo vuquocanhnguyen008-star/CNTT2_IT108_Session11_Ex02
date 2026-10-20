@@ -1,0 +1,38 @@
+Bài 2 : Khắc phục sự cố dữ liệu trong kho thiết bị IoT
+## PHẦN 1: PHÂN TÍCH (Các quy tắc vàng bị vi phạm)
+Bảng tính hiện tại đang vi phạm **3 quy tắc vàng** trong tư duy Cơ sở dữ liệu (Database):
+1. **Quy tắc 1: Không gộp ô (No Merge Cells)**
+* *Hiện trạng:* Hàng tiêu đề đang bị gộp ô (Merge Cell).
+* *Tác hại:* Làm sai lệch vùng chọn dữ liệu, khiến tính năng AutoFilter hoặc sắp xếp (Sort) hoạt động không chuẩn.
+
+2. **Quy tắc 2: Không chứa dòng/cột trống xen kẽ (No Blank Rows/Columns)**
+* *Hiện trạng:* Bảng tính xuất hiện dòng trống nằm ngắt ngắt giữa bảng.
+* *Tác hại:* Khi bấm `Ctrl + Shift + L`, Excel hiểu bảng bị ngắt đôi nên nút Filter bị mất/dừng lại ngay tại vị trí dòng trống.
+
+3. **Quy tắc 3: Dữ liệu phải nhất quán, không chứa khoảng trắng thừa (Clean Data)**
+* *Hiện trạng:* Ô dữ liệu chứa khoảng trắng thừa vô hình ở đầu/cuối chuỗi (ví dụ: `"Hỏng "` và `"Hỏng"`).
+* *Tác hại:* Excel phân biệt 2 chuỗi này khác nhau làm bộ lọc (Filter) tách ra thành 2 nhóm riêng biệt.
+
+## PHẦN 2: HOÀN THIỆN (Các bước xử lý bài toán)
+### Bước 1: Gỡ bỏ Merge Cell ở hàng tiêu đề
+* **Cách làm:** Bôi đen hàng tiêu đề $\rightarrow$ Vào thẻ **Home** $\rightarrow$ Click nút **Merge & Center** để bỏ gộp ô. Điền lại tiêu đề cho từng cột riêng biệt nếu thiếu.
+
+### Bước 2: Xóa bỏ dòng trống trong bảng
+* **Cách làm:**
+1. Bôi đen toàn bộ bảng dữ liệu.
+2. Bấm `Ctrl + G` $\rightarrow$ Chọn **Special...** $\rightarrow$ Chọn **Blanks** $\rightarrow$ Bấm **OK** (Excel sẽ tự chọn các dòng trống).
+3. Chuột phải vào dòng trống được chọn $\rightarrow$ Chọn **Delete** $\rightarrow$ Chọn **Shift cells up** (hoặc **Entire row**) để xóa hẳn các dòng trống.
+
+### Bước 3: Làm sạch cột "Trạng thái" bằng hàm `TRIM`
+* **Cách làm:**
+1. Chèn thêm 1 cột phụ bên cạnh cột "Trạng thái" (ví dụ: cột Cố định/Làm sạch).
+2. Nhập công thức tại ô đầu tiên của cột mới (giả sử cột Trạng thái gốc là cột `D`, bắt đầu từ `D2`):
+=TRIM(D2)
+
+3. Kéo/Autofill công thức xuống hết toàn bộ các dòng bên dưới.
+4. Bôi đen toàn bộ cột mới tạo $\rightarrow$ Bấm `Ctrl + C` $\rightarrow$ Chuột phải vào cột Trạng thái cũ $\rightarrow$ Chọn **Paste Values** (Dán giá trị) để đè dữ liệu chuẩn lên.
+5. Xóa cột phụ vừa tạo.
+
+### Bước 4: Bật lại bộ lọc Filter
+* Bôi đen toàn bộ bảng dữ liệu đã chuẩn hóa (hoặc chọn ô tiêu đề bất kỳ).
+* Bấm tổ hợp phím **`Ctrl + Shift + L`** để bật bộ lọc AutoFilter. Bộ lọc lúc này sẽ nhận đủ toàn bộ bảng và nhóm chính xác các giá trị "Hỏng".
